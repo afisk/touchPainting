@@ -118,7 +118,7 @@ neopixel_write.neopixel_write(onBoardNeoPixel, green)
 
 # Watchdog to go to sleep
 wdt = microcontroller.watchdog
-wdt.timeout=2 # Set a timeout of 15 seconds
+wdt.timeout=15 # Set a timeout of 15 seconds
 wdt.mode = watchdog.WatchDogMode.RAISE
 wdt.feed()
 
