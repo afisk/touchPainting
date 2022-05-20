@@ -39,60 +39,9 @@ import watchdog
 #import random
 #from analogio import AnalogIn # Reading battery values
 
-
-
-
-
-# from ctypes import *
-# file = "libTest.so"
-# myLib = cdll.LoadLibrary(file)
-# myLib.square(5)
-
-
-
 # I2C For capacitive touch breakout board
 i2c = busio.I2C(board.SCL, board.SDA)
 mpr121 = adafruit_mpr121.MPR121(i2c)
-
-if mpr121.touched():
-    print("Touched")
-
-
-# Read the config 2 information, then write over it
-#buffer = bytearray(2)
-#MPR121_CONFIG2 = const(0x5D)
-#mpr121._read_register_bytes(MPR121_CONFIG2, buffer)
-#if buffer[1] != 0x24:
-#    print("DID IT RIGHT")
-#buffer[1] = buffer[1] & 0b000
-#buffer[1] = buffer[1] | 0b100
-
-# mpr121._write_register_byte(MPR121_CONFIG2, buffer[1])
-# mpr121._write_register_byte(MPR121_CONFIG2, 0b0100100)
-
-
-
-
-
-
-
-#mpr121._write_register_byte(MPR121_GPIOEN, 0b10)
-
-#for i in range(9):
-#    if mpr121[i].value:
-#        print("Wake Reason: ", i)
-#time.sleep(6)
-
-
-
-
-#vbat_voltage = AnalogIn(board.VOLTAGE_MONITOR)
-#def get_voltage(pin):
-#    return (pin.value * 3.6) / 65536 * 2
-
-#battery_voltage = get_voltage(vbat_voltage)
-#print("VBat voltage: {:.2f}".format(battery_voltage))
-
 
 # LED Stuff Below This Line _____________________________________
 onBoardNeoPixel = digitalio.DigitalInOut(board.NEOPIXEL)
@@ -123,12 +72,6 @@ green = bytearray([25, 0, 0])
 #time.sleep(0.08)
 #neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
 
-
-speaker = AudioOut(board.A1)
-audioMode = 0
-filename = "robot.mp3"
-
-
 audioFiles = [
     [
         "monkey.mp3",               #0
@@ -151,28 +94,31 @@ audioFiles = [
         "monkey.mp3",               #7
     ],
 ]
+speaker = AudioOut(board.A1)
+audioMode = 0
+filename = audioFiles[0][0]
+
 # You have to specify some mp3 file when creating the decoder
-mp3 = open(audioFiles[0][0], "rb")
+mp3 = open(filename, "rb")
 decoder = MP3Decoder(mp3)
 
-blue = bytearray([0, 0, 100])
-cyan = bytearray([0, 100, 100])
-purple = bytearray([67, 5, 100])
+
+red = bytearray([0, 100, 0])
 orange = bytearray([40, 100, 0])
 yellow = bytearray([100, 100, 0])
-white = bytearray([100, 100, 100])
-red = bytearray([0, 100, 0])
 green = bytearray([25, 0, 0])
+cyan = bytearray([0, 100, 100])
+blue = bytearray([0, 0, 100])
+purple = bytearray([67, 5, 100])
+white = bytearray([100, 100, 100])
 
 pixelColors = [red,orange,yellow,green,cyan,blue,purple,white]
 
 neopixel_write.neopixel_write(onBoardNeoPixel, green)
 
-#from microcontroller import watchdog as wd
-#from watchdog import WatchDogMode
-
+# Watchdog to go to sleep
 wdt = microcontroller.watchdog
-wdt.timeout=15 # Set a timeout of 2.5 seconds
+wdt.timeout=2 # Set a timeout of 15 seconds
 wdt.mode = watchdog.WatchDogMode.RAISE
 wdt.feed()
 
@@ -180,12 +126,12 @@ touchIntPin = board.D11
 touchInt = digitalio.DigitalInOut(touchIntPin)
 touchInt.direction = digitalio.Direction.INPUT
 
-print("Touched: ", mpr121.touched())
-
 soundPlaying = False
 try:
     while True:
         playSound = False
+
+        # Play Sound?
         for i in range(8):
             if mpr121[i].value:
                 filename = audioFiles[audioMode][i]
@@ -194,6 +140,7 @@ try:
                 speaker.stop()
                 playSound = True
 
+        # Change Mode?
         if mpr121[8].value:
             audioMode += 1
             if audioMode > 1:
@@ -213,15 +160,12 @@ try:
 
         # print(audioMode, playSound)
 
+        # Play a sound if one was found
         if playSound:
             decoder.file = open(filename, "rb")
             speaker.play(decoder)
             print("playing", filename)
             time.sleep(0.3)
-            # This allows you to do other things while the audio plays!
-            # while speaker.playing:
-            #    pass
-            print("Starting Sound")
             soundPlaying = True
 
         if(not speaker.playing and soundPlaying):
@@ -235,21 +179,16 @@ try:
         if soundPlaying:
             wdt.feed()
 
+# Break out of loop if watchdog times out, then go to sleep
 except watchdog.WatchDogTimeout as e:
-    print("Watchdog expired")
     print("Watchdog Timed Out")
-    touchInt.deinit()
-    # Set Pin Alarm
-    neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
-    pin_alarm = alarm.pin.PinAlarm(pin=touchIntPin, value=False, pull=True)
-    # Exit the program, and then deep sleep until the alarm wakes us.
-    alarm.exit_and_deep_sleep_until_alarms(pin_alarm)
-    # Does not return, so we never get here.
+# Hopefully never happens
 except Exception as e:
     print("Other exception: ", e)
+    
+print("Going to sleep")
 
-print("Messed Up Something")
-
+# Go to sleep
 touchInt.deinit()
 # Set Pin Alarm
 neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
