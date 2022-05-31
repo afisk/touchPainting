@@ -74,24 +74,24 @@ green = bytearray([25, 0, 0])
 
 audioFiles = [
     [
-        "monkey.mp3",               #0
-        "africanFishEagle.mp3",     #1
-        "rainforest.mp3",           #2
-        "zebraCall.mp3",            #3
-        "tigerGrowel.mp3",          #4
-        "africanFishEagle.mp3",            #5
-        "elephant.mp3",             #6
-        "africanFishEagle.mp3",              #7
+        "1-africanFishEagle.mp3",       #0
+        "1-cheetah.mp3",                #1
+        "1-elephant.mp3",               #2
+        "1-zebraCall.mp3",              #3
+        "1-lionRawer.mp3",              #4
+        "1-monkey.mp3",                 #5
+        "1-rainforest.mp3",             #6
+        "1-tigerGrowel.mp3",            #7
     ],
     [
-        "monkey.mp3",               #0
-        "monkey.mp3",               #1
-        "monkey.mp3",               #2
-        "monkey.mp3",               #3
-        "monkey.mp3",               #4
-        "monkey.mp3",               #5
-        "monkey.mp3",               #6
-        "monkey.mp3",               #7
+        "2-Chello.mp3",#0
+        "2-DrumEffect1.mp3",#1
+        "2-DrumEffect2.mp3",#2
+        "2-Flute.mp3",#3
+        "2-Harmonica.mp3",#4
+        "2-Piano.mp3",#5
+        "2-Triangle.mp3",#6
+        "2-Xylophone.mp3",#7
     ],
 ]
 speaker = AudioOut(board.A1)
@@ -162,7 +162,7 @@ try:
 
         # Play a sound if one was found
         if playSound:
-            decoder.file = open(filename, "rb")
+            decoder.file = open("AudioFiles\\"+filename, "rb")
             speaker.play(decoder)
             print("playing", filename)
             time.sleep(0.3)
