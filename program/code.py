@@ -36,7 +36,7 @@ from audiomp3 import MP3Decoder
 import microcontroller
 import watchdog
 
-#import random
+import random
 #from analogio import AnalogIn # Reading battery values
 
 # I2C For capacitive touch breakout board
@@ -71,6 +71,13 @@ green = bytearray([25, 0, 0])
 #neopixel_write.neopixel_write(onBoardNeoPixel, green)
 #time.sleep(0.08)
 #neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
+
+messages = [
+    "$-Msg1.mp3",
+    "$-Msg2.mp3",
+    "$-Msg3.mp3",
+    "$-Msg4.mp3"
+]
 
 audioFiles = [
     [
@@ -126,6 +133,8 @@ touchIntPin = board.D11
 touchInt = digitalio.DigitalInOut(touchIntPin)
 touchInt.direction = digitalio.Direction.INPUT
 
+modeBtnInRowCount = 0
+
 soundPlaying = False
 try:
     while True:
@@ -137,6 +146,7 @@ try:
                 filename = audioFiles[audioMode][i]
                 neopixel_write.neopixel_write(onBoardNeoPixel, pixelColors[i])
                 print("Playing Index: ", i, " File: ", audioFiles[audioMode][i])
+                modeBtnInRowCount = 0
                 speaker.stop()
                 playSound = True
 
@@ -146,7 +156,14 @@ try:
             if audioMode > 1:
                 audioMode = 0
             print("Changing Audio Mode: ", audioMode)
-            filename = "modeChime.mp3"
+            
+            modeBtnInRowCount
+            #Play secret messages?
+            if modeBtnInRowCount == 10:
+                numMsgs = len(messages) - 1
+                filename = messages[ random.randint(0,numMsgs) ]
+            else:
+                filename = "#-modeChime.mp3"
             speaker.stop()
             playSound = True
 
