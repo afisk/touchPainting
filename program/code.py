@@ -17,7 +17,7 @@
 # Details:
 #   Run mAh:
 #   Sleep mAh:
-#   Sleep Runtime: 
+#   Sleep Runtime:
 #
 #########################################
 
@@ -100,13 +100,23 @@ audioFiles = [
         "2-Triangle.mp3",#6
         "2-Xylophone.mp3",#7
     ],
+    [
+        "3-BarredOwlHoot.mp3",#0
+        "3-CowMoo.mp3",#1
+        "3-Donkey.mp3",#2
+        "3-Frog.mp3",#3
+        "3-Goat.mp3",#4
+        "3-Rain.mp3",#5
+        "3-RocksNStones.mp3",#6
+        "3-Thunder.mp3",#7
+    ],
 ]
 speaker = AudioOut(board.A1)
 audioMode = 0
 filename = audioFiles[0][0]
 
 # You have to specify some mp3 file when creating the decoder
-mp3 = open(filename, "rb")
+mp3 = open("AudioFiles/"+filename, "rb")
 decoder = MP3Decoder(mp3)
 
 
@@ -153,11 +163,11 @@ try:
         # Change Mode?
         if mpr121[8].value:
             audioMode += 1
-            if audioMode > 1:
+            if audioMode > 2:
                 audioMode = 0
             print("Changing Audio Mode: ", audioMode)
-            
-            modeBtnInRowCount
+
+            modeBtnInRowCount += 1
             #Play secret messages?
             if modeBtnInRowCount == 10:
                 numMsgs = len(messages) - 1
@@ -179,7 +189,7 @@ try:
 
         # Play a sound if one was found
         if playSound:
-            decoder.file = open("AudioFiles\\"+filename, "rb")
+            decoder.file = open("AudioFiles/"+filename, "rb")
             speaker.play(decoder)
             print("playing", filename)
             time.sleep(0.3)
@@ -190,7 +200,7 @@ try:
             neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
             soundPlaying = False
             speaker.stop()
-        
+
         # Feed the watchdog while sounds are playing
         # Watchdog will shut down board when sounds stop
         if soundPlaying:
@@ -202,7 +212,7 @@ except watchdog.WatchDogTimeout as e:
 # Hopefully never happens
 except Exception as e:
     print("Other exception: ", e)
-    
+
 print("Going to sleep")
 
 # Go to sleep
