@@ -39,6 +39,38 @@ import watchdog
 import random
 #from analogio import AnalogIn # Reading battery values
 
+
+
+# Start up tones - 200, 300, 400, 500 Hz
+# # import time
+# import array
+# import math
+# # import board
+# # import digitalio
+# from audiocore import RawSample
+
+# button = digitalio.DigitalInOut(board.A1)
+# button.switch_to_input(pull=digitalio.Pull.UP)
+
+# tone_volume = 0.1  # Increase this to increase the volume of the tone.
+# frequency = 440  # Set this to the Hz of the tone you want to generate.
+# length = 8000 // frequency
+# sine_wave = array.array("H", [0] * length)
+# for i in range(length):
+#     sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+
+# audio = AudioOut(board.A0)
+# sine_wave_sample = RawSample(sine_wave)
+
+# while True:
+#     if not button.value:
+#         audio.play(sine_wave_sample, loop=True)
+#         time.sleep(1)
+#         audio.stop()
+
+
+
+
 # I2C For capacitive touch breakout board
 i2c = busio.I2C(board.SCL, board.SDA)
 mpr121 = adafruit_mpr121.MPR121(i2c)
