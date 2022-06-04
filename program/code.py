@@ -39,36 +39,74 @@ import watchdog
 import random
 #from analogio import AnalogIn # Reading battery values
 
+import array
+import math
+from audiocore import RawSample
 
 
-# Start up tones - 200, 300, 400, 500 Hz
-# # import time
-# import array
-# import math
-# # import board
-# # import digitalio
-# from audiocore import RawSample
+# Start Up Sound
+startToneTime = 0.2
+speaker = AudioOut(board.A2)
+tone_volume = 0.7  # Increase this to increase the volume of the tone.
 
-# button = digitalio.DigitalInOut(board.A1)
-# button.switch_to_input(pull=digitalio.Pull.UP)
+frequency = 200  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+speaker.stop()
 
-# tone_volume = 0.1  # Increase this to increase the volume of the tone.
-# frequency = 440  # Set this to the Hz of the tone you want to generate.
-# length = 8000 // frequency
-# sine_wave = array.array("H", [0] * length)
-# for i in range(length):
-#     sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-
-# audio = AudioOut(board.A0)
-# sine_wave_sample = RawSample(sine_wave)
-
-# while True:
-#     if not button.value:
-#         audio.play(sine_wave_sample, loop=True)
-#         time.sleep(1)
-#         audio.stop()
+frequency = 300  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+speaker.stop()
 
 
+frequency = 400  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+
+frequency = 500  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+
+frequency = 600  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+
+frequency = 690  # Set this to the Hz of the tone you want to generate.
+length = 8000 // frequency
+sine_wave = array.array("H", [0] * length)
+for i in range(length):
+    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+
+sine_wave_sample = RawSample(sine_wave)
+speaker.play(sine_wave_sample, loop=True)
+time.sleep(startToneTime)
+speaker.stop()
 
 
 # I2C For capacitive touch breakout board
@@ -120,30 +158,25 @@ audioFiles = [
         "1-lionRawer.mp3",              #4
         "1-monkey.mp3",                 #5
         "1-rainforest.mp3",             #6
-        "1-tigerGrowel.mp3",            #7
+        "3-Frog.mp3",                   #7
+        "3-BarredOwlHoot.mp3",          #8
+        "3-CowMoo.mp3",                 #9
+        "3-Donkey.mp3",                 #10
     ],
     [
-        "2-Chello.mp3",#0
-        "2-DrumEffect1.mp3",#1
-        "2-DrumEffect2.mp3",#2
-        "2-Flute.mp3",#3
-        "2-Harmonica.mp3",#4
-        "2-Piano.mp3",#5
-        "2-Triangle.mp3",#6
-        "2-Xylophone.mp3",#7
-    ],
-    [
-        "3-BarredOwlHoot.mp3",#0
-        "3-CowMoo.mp3",#1
-        "3-Donkey.mp3",#2
-        "3-Frog.mp3",#3
-        "3-Goat.mp3",#4
-        "3-Rain.mp3",#5
-        "3-RocksNStones.mp3",#6
-        "3-Thunder.mp3",#7
-    ],
+        "2-Chello.mp3",                 #0
+        "2-DrumEffect1.mp3",            #1
+        "2-DrumEffect2.mp3",            #2
+        "2-Flute.mp3",                  #3
+        "2-Harmonica.mp3",              #4
+        "2-Piano.mp3",                  #5
+        "2-Triangle.mp3",               #6
+        "2-Xylophone.mp3",              #7
+        "3-Rain.mp3",                   #8
+        "3-RocksNStones.mp3",           #9
+        "3-Thunder.mp3",                #10
+    ]
 ]
-speaker = AudioOut(board.A1)
 audioMode = 0
 filename = audioFiles[0][0]
 
@@ -161,9 +194,9 @@ blue = bytearray([0, 0, 100])
 purple = bytearray([67, 5, 100])
 white = bytearray([100, 100, 100])
 
-pixelColors = [red,orange,yellow,green,cyan,blue,purple,white]
+pixelColors = [red,orange,yellow,green,cyan,blue,purple,white, red,orange,yellow]
 
-neopixel_write.neopixel_write(onBoardNeoPixel, green)
+# neopixel_write.neopixel_write(onBoardNeoPixel, green)
 
 # Watchdog to go to sleep
 wdt = microcontroller.watchdog
@@ -181,9 +214,8 @@ soundPlaying = False
 try:
     while True:
         playSound = False
-
         # Play Sound?
-        for i in range(8):
+        for i in range(11):
             if mpr121[i].value:
                 filename = audioFiles[audioMode][i]
                 neopixel_write.neopixel_write(onBoardNeoPixel, pixelColors[i])
@@ -193,9 +225,9 @@ try:
                 playSound = True
 
         # Change Mode?
-        if mpr121[8].value:
+        if mpr121[11].value:
             audioMode += 1
-            if audioMode > 2:
+            if audioMode > 1:
                 audioMode = 0
             print("Changing Audio Mode: ", audioMode)
 
