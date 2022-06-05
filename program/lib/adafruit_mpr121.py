@@ -180,7 +180,9 @@ class MPR121:
             raise RuntimeError("Failed to find MPR121 in expected config state!")
         # Default touch and release thresholds
         for i in range(12):
-            self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 12)
+            # self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 12)
+            # self._write_register_byte(MPR121_RELEASETH_0 + 2 * i, 6)
+            self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 25)
             self._write_register_byte(MPR121_RELEASETH_0 + 2 * i, 6)
         # Configure baseline filtering control registers.
         self._write_register_byte(MPR121_MHDR, 0x01)
