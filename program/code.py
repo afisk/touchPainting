@@ -43,6 +43,7 @@ import array
 import math
 from audiocore import RawSample
 
+noActivitySleepTime = 15
 
 # Start Up Sound
 startToneTime = 0.2
@@ -200,7 +201,7 @@ pixelColors = [red,orange,yellow,green,cyan,blue,purple,white, red,orange,yellow
 
 # Watchdog to go to sleep
 wdt = microcontroller.watchdog
-wdt.timeout=15 # Set a timeout of 15 seconds
+wdt.timeout = noActivitySleepTime # Set a timeout of 15 seconds
 wdt.mode = watchdog.WatchDogMode.RAISE
 wdt.feed()
 
