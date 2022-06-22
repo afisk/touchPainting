@@ -182,7 +182,7 @@ class MPR121:
         for i in range(12):
             # self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 12)
             # self._write_register_byte(MPR121_RELEASETH_0 + 2 * i, 6)
-            self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 20)
+            self._write_register_byte(MPR121_TOUCHTH_0 + 2 * i, 18)
             self._write_register_byte(MPR121_RELEASETH_0 + 2 * i, 6)
         # Configure baseline filtering control registers.
         self._write_register_byte(MPR121_MHDR, 0x01)

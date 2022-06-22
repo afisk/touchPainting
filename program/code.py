@@ -280,6 +280,9 @@ except Exception as e:
 
 print("Going to sleep")
 
+# Set Touch sensor to be less sensitive while asleep
+mpr121.write_register_byte(mpr121.MPR121_TOUCHTH_0 + 2 * i, 25)
+
 # Go to sleep
 touchInt.deinit()
 # Set Pin Alarm
