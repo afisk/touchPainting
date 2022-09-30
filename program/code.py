@@ -108,7 +108,7 @@ green = bytearray([25, 0, 0])
 # Troll messages that play after *trollTouchAmount* of mode changes
 trollMessages = [
     "troll-austinScream.mp3",
-    "troll-ydHeWasOnMyLeg.mp3",
+    "troll-sydHeWasOnMyLeg.mp3",
     "troll-sydScream.mp3",
     "troll-rasheaSnore.mp3",
 ]
