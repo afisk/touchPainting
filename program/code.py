@@ -119,7 +119,7 @@ if(numTouchPoints == 11):
     audioFiles = [
         [
             "1-africanFishEagle.mp3",       #0
-            "1-rubIt.mp3",                  #1 - Dart Frog Butt
+            "butt-rubIt.mp3",                  #1 - Dart Frog Butt
             "1-elephant.mp3",               #2
             "1-zebraCall.mp3",              #3
             "1-lionRawer.mp3",              #4
@@ -132,7 +132,7 @@ if(numTouchPoints == 11):
         ],
         [
             "2-Chello.mp3",                 #0
-            "2-spankIt.mp3",                #1 - Dart Frog Butt
+            "butt-spankIt.mp3",                #1 - Dart Frog Butt
             "2-DrumEffect2.mp3",            #2
             "2-Flute.mp3",                  #3
             "2-Harmonica.mp3",              #4
