@@ -236,7 +236,7 @@ try:
         for i in range(11):
             if mpr121[i].value:
                 filename = audioFiles[audioMode][i]
-                neopixel_write.neopixel_write(onBoardNeoPixel, pixelColors[i])
+                # neopixel_write.neopixel_write(onBoardNeoPixel, pixelColors[i])
                 print("Playing Index: ", i, " File: ", audioFiles[audioMode][i])
                 modeBtnInRowCount = 0
                 speaker.stop()
@@ -261,13 +261,13 @@ try:
             speaker.stop()
             playSound = True
 
-            neopixel_write.neopixel_write(onBoardNeoPixel, white)
-            time.sleep(0.08)
-            neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
-            time.sleep(0.05)
-            neopixel_write.neopixel_write(onBoardNeoPixel, white)
-            time.sleep(0.08)
-            neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
+            # neopixel_write.neopixel_write(onBoardNeoPixel, white)
+            # time.sleep(0.08)
+            # neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
+            # time.sleep(0.05)
+            # neopixel_write.neopixel_write(onBoardNeoPixel, white)
+            # time.sleep(0.08)
+            # neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
 
         # print(audioMode, playSound)
 
@@ -281,7 +281,7 @@ try:
 
         if(not speaker.playing and soundPlaying):
             print("    Sound Finished")
-            neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
+            # neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
             soundPlaying = False
             speaker.stop()
 
