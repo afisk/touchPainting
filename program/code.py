@@ -1,5 +1,5 @@
 
-#########################################
+####################################################
 #
 # Author: Austin Fisk
 #
@@ -19,9 +19,12 @@
 #   Sleep mAh:
 #   Sleep Runtime:
 #
-#########################################
+####################################################
 
 
+#****************************************************
+#   I M P O R T   L I B R A R I E S
+#****************************************************
 import time
 import alarm
 import board
@@ -29,87 +32,57 @@ import busio
 import digitalio
 import neopixel_write
 import adafruit_mpr121
-
 from audiopwmio import PWMAudioOut as AudioOut
 from audiomp3 import MP3Decoder
-
 import microcontroller
 import watchdog
-
 import random
-#from analogio import AnalogIn # Reading battery values
-
 import array
 import math
 from audiocore import RawSample
 
-noActivitySleepTime = 15
+####################################################
+# Func: playFrequency
+# Args: frequency - The Hz of the tone you want to generate
+#       playTime - Amount of time the frequency should play
+####################################################
+def playFrequency(frequency, playTime, tone_volume):
+    length = 8000 // frequency
+    sine_wave = array.array("H", [0] * length)
+    for i in range(length):
+        sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
+    sine_wave_sample = RawSample(sine_wave)
+    speaker.play(sine_wave_sample, loop=True)
+    time.sleep(playTime)
+    speaker.stop()
 
-# Start Up Sound
-startToneTime = 0.2
+
+#****************************************************
+#   C O N F I G U R E   Y O U R   P A I N T I N G
+#****************************************************
+noActivitySleepTime = 15  #Amount of seconds before device goes to sleep
+numTouchPoints = 7  #Dart Frog - 11, Giraffe - 7
+trollTouchAmount = 3  #Num times you can touch mode change before trollMessages plpay
+
+startUpToneTime = 0.2
+startUpToneVolume = 0.7  # Increase this to increase the volume of the tone.
+
+
+#****************************************************
+#   S T A R T   U P   S O U N D
+#****************************************************
 speaker = AudioOut(board.A2)
-tone_volume = 0.7  # Increase this to increase the volume of the tone.
-
-frequency = 200  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-speaker.stop()
-
-frequency = 300  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-speaker.stop()
+playFrequency(200, startUpToneTime, startUpToneVolume)
+playFrequency(300, startUpToneTime, startUpToneVolume)
+playFrequency(400, startUpToneTime, startUpToneVolume)
+playFrequency(500, startUpToneTime, startUpToneVolume)
+playFrequency(600, startUpToneTime, startUpToneVolume)
+playFrequency(690, startUpToneTime, startUpToneVolume)
 
 
-frequency = 400  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-
-frequency = 500  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-
-frequency = 600  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-
-frequency = 690  # Set this to the Hz of the tone you want to generate.
-length = 8000 // frequency
-sine_wave = array.array("H", [0] * length)
-for i in range(length):
-    sine_wave[i] = int((1 + math.sin(math.pi * 2 * i / length)) * tone_volume * (2 ** 15 - 1))
-
-sine_wave_sample = RawSample(sine_wave)
-speaker.play(sine_wave_sample, loop=True)
-time.sleep(startToneTime)
-speaker.stop()
-
-
+#****************************************************
+#   S E T   U P   D E V I C E S
+#****************************************************
 # I2C For capacitive touch breakout board
 i2c = busio.I2C(board.SCL, board.SDA)
 mpr121 = adafruit_mpr121.MPR121(i2c)
@@ -131,53 +104,88 @@ white = bytearray([100, 100, 100])
 red = bytearray([0, 100, 0])
 green = bytearray([25, 0, 0])
 
-#neopixel_write.neopixel_write(onBoardNeoPixel, green)
-#time.sleep(1)
-#neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
-#time.sleep(1.5)
-#neopixel_write.neopixel_write(onBoardNeoPixel, green)
-#time.sleep(0.08)
-#neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
-#time.sleep(0.05)
-#neopixel_write.neopixel_write(onBoardNeoPixel, green)
-#time.sleep(0.08)
-#neopixel_write.neopixel_write(onBoardNeoPixel, pixel_off)
 
-messages = [
-    "$-Msg1.mp3",
-    "$-Msg2.mp3",
-    "$-Msg3.mp3",
-    "$-Msg4.mp3"
+# Troll messages that play after *trollTouchAmount* of mode changes
+trollMessages = [
+    "AustinScream.mp3",
+    "SydHeWasOnMyLeg.mp3",
+    "SydScream.mp3",
 ]
 
-audioFiles = [
-    [
-        "1-africanFishEagle.mp3",       #0
-        "1-cheetah.mp3",                #1
-        "1-elephant.mp3",               #2
-        "1-zebraCall.mp3",              #3
-        "1-lionRawer.mp3",              #4
-        "1-monkey.mp3",                 #5
-        "1-rainforest.mp3",             #6
-        "3-Frog.mp3",                   #7
-        "3-BarredOwlHoot.mp3",          #8
-        "3-CowMoo.mp3",                 #9
-        "3-Donkey.mp3",                 #10
-    ],
-    [
-        "2-Chello.mp3",                 #0
-        "2-DrumEffect1.mp3",            #1
-        "2-DrumEffect2.mp3",            #2
-        "2-Flute.mp3",                  #3
-        "2-Harmonica.mp3",              #4
-        "2-Piano.mp3",                  #5
-        "2-Triangle.mp3",               #6
-        "2-Xylophone.mp3",              #7
-        "3-Rain.mp3",                   #8
-        "3-RocksNStones.mp3",           #9
-        "3-Thunder.mp3",                #10
+# Set up sounds for each pin
+if(numTouchPoints == 11):
+    trollTouchAmount = 3
+    audioFiles = [
+        [
+            "1-africanFishEagle.mp3",       #0
+            "1-cheetah.mp3",                #1
+            "1-elephant.mp3",               #2
+            "1-zebraCall.mp3",              #3
+            "1-lionRawer.mp3",              #4
+            "1-monkey.mp3",                 #5
+            "1-rainforest.mp3",             #6
+            "3-Frog.mp3",                   #7
+            "3-BarredOwlHoot.mp3",          #8
+            "3-CowMoo.mp3",                 #9
+            "3-Donkey.mp3",                 #10
+        ],
+        [
+            "2-Chello.mp3",                 #0
+            "2-DrumEffect1.mp3",            #1
+            "2-DrumEffect2.mp3",            #2
+            "2-Flute.mp3",                  #3
+            "2-Harmonica.mp3",              #4
+            "2-Piano.mp3",                  #5
+            "2-Triangle.mp3",               #6
+            "2-Xylophone.mp3",              #7
+            "3-Rain.mp3",                   #8
+            "3-RocksNStones.mp3",           #9
+            "3-Thunder.mp3",                #10
+        ]
     ]
-]
+elif(numTouchPoints == 7):
+    trollTouchAmount = 4
+    audioFiles = [
+        [
+            "2-Chello.mp3",         #0
+            "2-Chello.mp3",         #1
+            "2-Chello.mp3",         #2
+            "2-Chello.mp3",         #3
+            "1-lionRawer.mp3",              #4
+            "1-monkey.mp3",                 #5
+            "1-rainforest.mp3",             #6
+            "3-Frog.mp3",                   #7
+            "1-zebraCall.mp3",              #8
+            "1-elephant.mp3",               #9
+            "1-cheetah.mp3",                #10
+        ],
+        [
+            "2-Chello.mp3",              #0
+            "2-Chello.mp3",             #1
+            "2-Chello.mp3",             #2
+            "2-Chello.mp3",             #3
+            "2-Harmonica.mp3",              #4
+            "2-Piano.mp3",                  #5
+            "2-Triangle.mp3",               #6
+            "2-Xylophone.mp3",              #7
+            "2-Flute.mp3",                  #8
+            "2-DrumEffect1.mp3",            #9
+            "2-Chello.mp3",            #10
+        ],
+        [
+            "2-Chello.mp3",             #0
+            "2-Chello.mp3",             #1
+            "2-Chello.mp3",             #2
+            "2-Chello.mp3",             #3
+            "3-CowMoo.mp3",                 #4
+            "3-RocksNStones.mp3",           #5
+            "3-Thunder.mp3",                #6
+            "3-Rain.mp3",                   #7
+            "3-BarredOwlHoot.mp3",          #8
+            "2-Chello.mp3",                 #9
+            "3-Donkey.mp3",                 #10
+        ]
+    ]
 audioMode = 0
 filename = audioFiles[0][0]
 
@@ -211,7 +219,15 @@ touchInt.direction = digitalio.Direction.INPUT
 
 modeBtnInRowCount = 0
 
+audioMode = random.randint(0,len(audioFiles))
 soundPlaying = False
+
+# Set Touch Sensor to sample more often
+mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, 0x20)
+
+#****************************************************
+#   M A I N   L O O P
+#****************************************************
 try:
     while True:
         playSound = False
@@ -228,15 +244,17 @@ try:
         # Change Mode?
         if mpr121[11].value:
             audioMode += 1
-            if audioMode > 1:
+            if audioMode >= len(audioFiles):
                 audioMode = 0
             print("Changing Audio Mode: ", audioMode)
 
             modeBtnInRowCount += 1
-            #Play secret messages?
-            if modeBtnInRowCount == 10:
-                numMsgs = len(messages) - 1
-                filename = messages[ random.randint(0,numMsgs) ]
+            #Play secret trollMessages?
+            if modeBtnInRowCount >= trollTouchAmount:
+                numMsgs = len(trollMessages) - 1
+                filename = trollMessages[ random.randint(0,numMsgs) ]
+            elif modeBtnInRowCount > 20:
+                modeBtnInRowCount = 0
             else:
                 filename = "#-modeChime.mp3"
             speaker.stop()
@@ -271,6 +289,10 @@ try:
         if soundPlaying:
             wdt.feed()
 
+#****************************************************
+#   S H U T   D O W N   O N   W A T C H   D O G
+#    T I M E   O U T   O R   E X C E P T I O N
+#****************************************************
 # Break out of loop if watchdog times out, then go to sleep
 except watchdog.WatchDogTimeout as e:
     print("Watchdog Timed Out")
@@ -278,10 +300,18 @@ except watchdog.WatchDogTimeout as e:
 except Exception as e:
     print("Other exception: ", e)
 
+
+#****************************************************
+#   D E V I C E   S H U T D O W N / S L E E P
+#****************************************************
 print("Going to sleep")
 
-# Set Touch sensor to be less sensitive while asleep
-mpr121._write_register_byte(adafruit_mpr121.MPR121_TOUCHTH_0 + 2 * i, 25)
+# Set Touch sensors to be less sensitive while asleep
+for i in range(12):
+    mpr121._write_register_byte(adafruit_mpr121.MPR121_TOUCHTH_0 + 2 * i, 40)
+# Set Touch Sensor to sample less
+# mpr121._write_register_byte(adafruit_mpr121.MPR121_ECR, 40)
+mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, 0x26) # 0xE7)
 
 # Go to sleep
 touchInt.deinit()
