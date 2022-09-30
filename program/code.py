@@ -61,7 +61,7 @@ def playFrequency(frequency, playTime, tone_volume):
 #   C O N F I G U R E   Y O U R   P A I N T I N G
 #****************************************************
 noActivitySleepTime = 15  #Amount of seconds before device goes to sleep
-numTouchPoints = 7  #Dart Frog - 11, Giraffe - 7
+numTouchPoints = 11  #Dart Frog - 11, Giraffe - 7
 trollTouchAmount = 3  #Num times you can touch mode change before trollMessages plpay
 
 startUpToneTime = 0.2
@@ -107,9 +107,10 @@ green = bytearray([25, 0, 0])
 
 # Troll messages that play after *trollTouchAmount* of mode changes
 trollMessages = [
-    "AustinScream.mp3",
-    "SydHeWasOnMyLeg.mp3",
-    "SydScream.mp3",
+    "troll-austinScream.mp3",
+    "troll-ydHeWasOnMyLeg.mp3",
+    "troll-sydScream.mp3",
+    "troll-rasheaSnore.mp3",
 ]
 
 # Set up sounds for each pin
