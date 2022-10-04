@@ -68,6 +68,26 @@ startUpToneTime = 0.2
 startUpToneVolume = 0.7  # Increase this to increase the volume of the tone.
 
 
+# Touch sensor CONFIG2 Base
+MPR121_CONFIG2_BASE = 0b00100000
+
+
+#****************************************************
+#   C O N F I G U R E   S L E E P   P O L L I N G
+#****************************************************
+#Polling defines
+MPR121_POLLING_1MS   = 0b000 #  1 ms
+MPR121_POLLING_2MS   = 0b001 #  2 ms
+MPR121_POLLING_4MS   = 0b010 #  4 ms
+MPR121_POLLING_8MS   = 0b011 #  8 ms
+MPR121_POLLING_16MS  = 0b100 # 16 ms -- mpr121 default
+MPR121_POLLING_32MS  = 0b101 # 32 ms
+MPR121_POLLING_64MS  = 0b110 # 64 ms
+MPR121_POLLING_128MS = 0b111 # 128 ms
+
+awakePollingSpeed = MPR121_CONFIG2_BASE | MPR121_POLLING_16MS
+sleepPollingSpeed = MPR121_CONFIG2_BASE | MPR121_POLLING_64MS
+
 #****************************************************
 #   S T A R T   U P   S O U N D
 #****************************************************
@@ -224,7 +244,7 @@ audioMode = random.randint(0,len(audioFiles))
 soundPlaying = False
 
 # Set Touch Sensor to sample more often
-mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, 0x20)
+mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, awakePollingSpeed)
 
 #****************************************************
 #   M A I N   L O O P
@@ -312,7 +332,8 @@ for i in range(12):
     mpr121._write_register_byte(adafruit_mpr121.MPR121_TOUCHTH_0 + 2 * i, 40)
 # Set Touch Sensor to sample less
 # mpr121._write_register_byte(adafruit_mpr121.MPR121_ECR, 40)
-mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, 0x26) # 0xE7)
+# mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, 0x26) # 0xE7)
+mpr121._write_register_byte(adafruit_mpr121.MPR121_CONFIG2, sleepPollingSpeed) # 0xE7)
 
 # Go to sleep
 touchInt.deinit()
