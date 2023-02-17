@@ -240,7 +240,7 @@ touchInt.direction = digitalio.Direction.INPUT
 
 modeBtnInRowCount = 0
 
-audioMode = random.randint(0,len(audioFiles))
+audioMode = random.randint(0,(len(audioFiles)-1))
 soundPlaying = False
 
 # Set Touch Sensor to sample more often
